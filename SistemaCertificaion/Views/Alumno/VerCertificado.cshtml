@@ -1,0 +1,254 @@
+﻿@model SistemaCertificaion.Models.Inscripcione
+
+@{
+    ViewData["Title"] = "Mi certificado";
+
+    var certificado = Model.Certificaciones
+        .FirstOrDefault(c => c.Activo == true);
+}
+
+<div class="container mt-4">
+
+    <a asp-action="Buscar"
+           class="btn btn-secondary mb-3">
+        Volver
+    </a>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h3 class="mb-3">
+                Detalle del certificado
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted">Estudiante</label>
+                    <h5>
+                        @Model.Alumno.Nombres @Model.Alumno.Apellidos
+                    </h5>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="text-muted">CI</label>
+                    <h5>
+                        @Model.Alumno.Ci
+                    </h5>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="text-muted">Curso</label>
+                    <h5>
+                        @Model.Curso.Nombre
+                    </h5>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    @if (certificado == null)
+    {
+        <div class="alert alert-warning">
+            Todavía no se generó un certificado para este curso.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5 class="mb-3">
+                    Estado del certificado
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>ISPI</span>
+
+                            @if (certificado.Ispi)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaIspi?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Proceso</span>
+
+                            @if (certificado.Proceso)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaProceso?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Generado</span>
+
+                            @if (certificado.Generado)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaGenerado?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Impresión</span>
+
+                            @if (certificado.Impresion)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaImpresion?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Enviado DNA</span>
+
+                            @if (certificado.EnviadoDna)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaEnviadoDna?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Finalizado</span>
+
+                            @if (certificado.Finalizado)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaFinalizado?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>SMS Retiro</span>
+
+                            @if (certificado.SmsRetiro)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaSmsRetiro?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="estado-card">
+                            <span>Entregado</span>
+
+                            @if (certificado.Entregado)
+                            {
+                                <strong class="text-success">Completado</strong>
+                                <small>@certificado.FechaEntregado?.ToString("dd/MM/yyyy")</small>
+                            }
+                            else
+                            {
+                                <strong class="text-muted">Pendiente</strong>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <div class="mt-3">
+
+                    <h6>Observación</h6>
+
+                    @if (!string.IsNullOrWhiteSpace(certificado.Observacion))
+                    {
+                        <p class="mb-0">
+                            @certificado.Observacion
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            Sin observación.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<style>
+
+    .estado-card {
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        padding: 15px;
+        min-height: 100px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+        .estado-card span {
+            font-size: 13px;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .estado-card strong {
+            font-size: 15px;
+        }
+
+        .estado-card small {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+</style>

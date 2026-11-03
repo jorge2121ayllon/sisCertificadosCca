@@ -1,0 +1,108 @@
+﻿@model SistemaCertificaion.ViewModels.ResultadoImportacionViewModel
+
+@{
+    ViewData["Title"] = "Resultado Importación";
+}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow border-0">
+
+            <div class="card-header bg-success text-white">
+
+                <h4 class="mb-0">
+                    Resultado de la Importación
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="alert alert-success">
+
+                    La importación finalizó correctamente.
+
+                </div>
+
+                <table class="table table-bordered table-striped">
+
+                    <tbody>
+
+                        <tr>
+                            <th width="50%">
+                                Alumnos creados
+                            </th>
+                            <td>
+                                @Model.AlumnosCreados
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Cursos creados
+                            </th>
+                            <td>
+                                @Model.CursosCreados
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Inscripciones creadas
+                            </th>
+                            <td>
+                                @Model.InscripcionesCreadas
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Certificaciones creadas
+                            </th>
+                            <td>
+                                @Model.CertificacionesCreadas
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Registros omitidos
+                            </th>
+                            <td>
+                                @Model.RegistrosOmitidos
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Errores encontrados
+                            </th>
+                            <td>
+                                @Model.Errores
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <div class="text-end">
+
+                    <a asp-action="Index"
+                           class="btn btn-primary">
+
+                        Nueva Importación
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

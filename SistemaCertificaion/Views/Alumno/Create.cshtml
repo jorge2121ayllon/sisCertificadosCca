@@ -1,0 +1,275 @@
+﻿@model Alumno
+
+@{
+    ViewData["Title"] = "Nuevo Alumno";
+}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-header bg-dark text-white border-0 py-4">
+
+                    <h3 class="mb-1 fw-bold text-center">
+                        <i class="bi bi-mortarboard-fill text-info"></i>
+                        Nuevo Alumno
+                    </h3>
+
+                    <p class="text-center mb-0 text-light">
+                        Registro de estudiantes para certificación
+                    </p>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                            @TempData["Error"]
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+                    }
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+
+                            <i class="bi bi-check-circle-fill me-2"></i>
+
+                            @TempData["Success"]
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Nombres"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+
+                                    <input asp-for="Nombres"
+                                           class="form-control"
+                                           placeholder="Ingrese nombres" />
+
+                                </div>
+
+                                <span asp-validation-for="Nombres"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Apellidos"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-badge-fill"></i>
+                                    </span>
+
+                                    <input asp-for="Apellidos"
+                                           class="form-control"
+                                           placeholder="Ingrese apellidos" />
+
+                                </div>
+
+                                <span asp-validation-for="Apellidos"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Ci"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-card-text"></i>
+                                    </span>
+
+                                    <input asp-for="Ci"
+                                           class="form-control"
+                                           placeholder="Ingrese CI" />
+
+                                </div>
+
+                                <span asp-validation-for="Ci"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Celular"
+                                       class="form-label fw-semibold">
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-telephone-fill"></i>
+                                    </span>
+
+                                    <input asp-for="Celular"
+                                           class="form-control"
+                                           placeholder="Ingrese celular" />
+
+                                </div>
+
+                                <span asp-validation-for="Celular"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label asp-for="Email"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </span>
+
+                                <input asp-for="Email"
+                                       class="form-control"
+                                       placeholder="correo@ejemplo.com" />
+
+                            </div>
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between">
+
+                            <a asp-action="Index"
+                                   class="btn btn-outline-secondary rounded-3">
+
+                                <i class="bi bi-arrow-left-circle"></i>
+                                Volver
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-guardar">
+
+                                <i class="bi bi-check-circle-fill"></i>
+                                Guardar Alumno
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .card {
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        background: #f8fafc;
+        min-width: 45px;
+        justify-content: center;
+    }
+
+    .form-control {
+        padding: 10px;
+    }
+
+        .form-control:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 .15rem rgba(56,189,248,.25);
+        }
+
+    .btn-guardar {
+        background: #38bdf8;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+        .btn-guardar:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+
+    .alert {
+        border-radius: 12px;
+    }
+
+</style>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

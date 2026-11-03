@@ -1,0 +1,44 @@
+﻿@model Usuario
+
+
+@{
+    ViewData["Title"] = "Informacion del Alumno";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">@ViewData["Title"]</h4>
+            </div>
+
+            <div class="card-body">
+                
+                <dl class="row">
+                    <dt class="col-sm-4">NombreUsuario</dt>
+                    <dd class="col-sm-8">@Model.NombreUsuario</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+
+                    <dt class="col-sm-4">Rol</dt>
+                    <dd class="col-sm-8">@Model.Rol</dd>
+
+                    <dt class="col-sm-4">Fecha Registro</dt>
+                    <dd class="col-sm-8">@Model.FechaRegistro</dd>
+                </dl>
+
+                <form asp-action="Details" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="d-flex gap-2">
+                        
+                        <a asp-action="Index" class="btn btn-secondary">
+                            Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

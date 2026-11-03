@@ -1,0 +1,105 @@
+﻿@model SistemaCertificaion.ViewModels.ImportarExcelViewModel
+
+@{
+    ViewData["Title"] = "Importar Certificaciones";
+}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow border-0">
+
+            <div class="card-header bg-success text-white">
+
+                <h4 class="mb-0">
+                    Importación Masiva de Certificaciones
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                @if (TempData["Mensaje"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+
+                        @TempData["Mensaje"]
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert">
+                        </button>
+
+                    </div>
+                }
+
+                <form asp-action="Importar"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+
+                        <label asp-for="ArchivoExcel"
+                               class="form-label fw-bold">
+                            Archivo Excel
+                        </label>
+
+                        <input asp-for="ArchivoExcel"
+                               type="file"
+                               class="form-control"
+                               accept=".xlsx,.xls" />
+
+                        <span asp-validation-for="ArchivoExcel"
+                              class="text-danger">
+                        </span>
+
+                        <small class="text-muted">
+                            Seleccione un archivo Excel (.xlsx)
+                        </small>
+
+                    </div>
+
+                    <div class="alert alert-info">
+
+                        <strong>Importante:</strong>
+
+                        <ul class="mb-0 mt-2">
+                            <li>El archivo debe contener la estructura definida por la institución.</li>
+                            <li>Los alumnos se identificarán por CI.</li>
+                            <li>Los cursos se identificarán por Código.</li>
+                            <li>Las certificaciones duplicadas serán omitidas.</li>
+                        </ul>
+
+                    </div>
+
+                    <div class="text-end">
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            <i class="bi bi-upload"></i>
+                            Importar Archivo
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

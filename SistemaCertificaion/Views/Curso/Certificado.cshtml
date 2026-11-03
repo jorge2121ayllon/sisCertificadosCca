@@ -1,0 +1,752 @@
+﻿
+@model SistemaCertificaion.ViewModels.CursoCertificadoViewModel
+
+@{
+    ViewData["Title"] = "Certificados";
+}
+
+<h2 class="mb-3">Certificados del Curso</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-1">@Model.NombreCurso</h5>
+        <p class="mb-0 text-muted">
+            Código: <strong>@Model.CodigoCurso</strong>
+        </p>
+    </div>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle text-center tabla-certificados">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-start">Alumno</th>
+                        <th>CI</th>
+                        <th>ISPI</th>
+                        <th>Proceso</th>
+                        <th>Generado</th>
+                        <th>Impresión</th>
+                        <th>DNA</th>
+                        <th>Finalizado</th>
+                        <th>SMS Retiro</th>
+                        <th>Entregado</th>
+                        <th class="text-start">Observación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Inscripciones)
+                    {
+                        var certificado = item.Certificaciones
+                            .FirstOrDefault(c => c.Activo == true);
+
+                        <tr>
+                            <td class="text-start fw-semibold">
+                                @item.Alumno.Nombres @item.Alumno.Apellidos
+                            </td>
+
+                            <td>@item.Alumno.Ci</td>
+
+                            @if (certificado == null)
+                            {
+                                <td colspan="8">
+                                    <span class="badge bg-warning text-dark px-3 py-2">
+                                        Sin certificado
+                                    </span>
+                                </td>
+
+                                <td class="text-start">
+                                    <span class="text-muted">Sin observación</span>
+                                </td>
+
+                                <td>
+                                    <form asp-action="AgregarCertificado" method="post">
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="inscripcionId"
+                                               value="@item.Id" />
+
+                                        <input type="hidden"
+                                               name="cursoId"
+                                               value="@Model.CursoId" />
+
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            Agregar
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <!-- ISPI -->
+                                <td>
+                                    @if (certificado.Ispi)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-success btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Ispi" })"
+                                               data-estado="ISPI"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaIspi?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Ispi" })"
+                                           data-estado="ISPI"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- PROCESO -->
+                                <td>
+                                    @if (certificado.Proceso)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-primary btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Proceso" })"
+                                               data-estado="Proceso"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaProceso?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Proceso" })"
+                                           data-estado="Proceso"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- GENERADO -->
+                                <td>
+                                    @if (certificado.Generado)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-secondary btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Generado" })"
+                                               data-estado="Generado"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaGenerado?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Generado" })"
+                                           data-estado="Generado"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- IMPRESIÓN -->
+                                <td>
+                                    @if (certificado.Impresion)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-dark btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Impresion" })"
+                                               data-estado="Impresión"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaImpresion?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Impresion" })"
+                                           data-estado="Impresión"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- DNA -->
+                                <td>
+                                    @if (certificado.EnviadoDna)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-warning text-dark btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "EnviadoDna" })"
+                                               data-estado="Enviado DNA"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaEnviadoDna?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "EnviadoDna" })"
+                                           data-estado="Enviado DNA"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- FINALIZADO -->
+                                <td>
+                                    @if (certificado.Finalizado)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-info text-dark btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Finalizado" })"
+                                               data-estado="Finalizado"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaFinalizado?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Finalizado" })"
+                                           data-estado="Finalizado"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- SMS RETIRO -->
+                                <td>
+                                    @if (certificado.SmsRetiro)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-primary btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "SmsRetiro" })"
+                                               data-estado="SMS Retiro"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaSmsRetiro?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "SmsRetiro" })"
+                                           data-estado="SMS Retiro"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- ENTREGADO -->
+                                <td>
+                                    @if (certificado.Entregado)
+                                    {
+                                        <div class="estado-ok">
+                                            <a href="#"
+                                               class="badge bg-success btn-confirmar-estado text-decoration-none"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalConfirmarEstado"
+                                               data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Entregado" })"
+                                               data-estado="Entregado"
+                                               data-current="true"
+                                               data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">✓</a>
+
+                                            <small>@certificado.FechaEntregado?.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a href="#"
+                                           class="badge estado-pendiente text-decoration-none btn-confirmar-estado"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#modalConfirmarEstado"
+                                           data-url="@Url.Action("CambiarEstado", new { certificadoId = certificado.Id, accion = "Entregado" })"
+                                           data-estado="Entregado"
+                                           data-current="false"
+                                           data-alumno="@item.Alumno.Nombres @item.Alumno.Apellidos">Pendiente</a>
+                                    }
+                                </td>
+
+                                <!-- OBSERVACIÓN -->
+                                <td class="text-start">
+                                    @if (!string.IsNullOrWhiteSpace(certificado.Observacion))
+                                    {
+                                        @certificado.Observacion
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin observación</span>
+                                    }
+                                </td>
+
+                                <!-- ACCIONES -->
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalCertificado@certificado.Id">
+                                        Editar
+                                    </button>
+                                </td>
+                            }
+                        </tr>
+
+                        @if (certificado != null)
+                        {
+                            <!-- MODAL EDITAR CERTIFICADO -->
+                            <div class="modal fade"
+                                 id="modalCertificado@certificado.Id"
+                                 tabindex="-1"
+                                 aria-hidden="true">
+
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+
+                                        <form asp-action="ActualizarCertificado"
+                                              method="post"
+                                              enctype="multipart/form-data">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title">
+                                                    Certificado -
+                                                    @item.Alumno.Nombres
+                                                    @item.Alumno.Apellidos
+                                                </h5>
+
+                                                <button type="button"
+                                                        class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <input type="hidden"
+                                                       name="certificadoId"
+                                                       value="@certificado.Id" />
+
+                                                <input type="hidden"
+                                                       name="cursoId"
+                                                       value="@Model.CursoId" />
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="ispi"
+                                                                   value="true"
+                                                            @(certificado.Ispi ? "checked" : "") />
+
+                                                            <input type="hidden" name="ispi" value="false" />
+
+                                                            <label class="form-check-label">ISPI</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="proceso"
+                                                                   value="true"
+                                                            @(certificado.Proceso ? "checked" : "") />
+
+                                                            <input type="hidden" name="proceso" value="false" />
+
+                                                            <label class="form-check-label">Proceso</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="generado"
+                                                                   value="true"
+                                                            @(certificado.Generado ? "checked" : "") />
+
+                                                            <input type="hidden" name="generado" value="false" />
+
+                                                            <label class="form-check-label">Generado</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="impresion"
+                                                                   value="true"
+                                                            @(certificado.Impresion ? "checked" : "") />
+
+                                                            <input type="hidden" name="impresion" value="false" />
+
+                                                            <label class="form-check-label">Impresión</label>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="enviadoDna"
+                                                                   value="true"
+                                                            @(certificado.EnviadoDna ? "checked" : "") />
+
+                                                            <input type="hidden" name="enviadoDna" value="false" />
+
+                                                            <label class="form-check-label">Enviado DNA</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="finalizado"
+                                                                   value="true"
+                                                            @(certificado.Finalizado ? "checked" : "") />
+
+                                                            <input type="hidden" name="finalizado" value="false" />
+
+                                                            <label class="form-check-label">Finalizado</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="smsRetiro"
+                                                                   value="true"
+                                                            @(certificado.SmsRetiro ? "checked" : "") />
+
+                                                            <input type="hidden" name="smsRetiro" value="false" />
+
+                                                            <label class="form-check-label">SMS Retiro</label>
+                                                        </div>
+
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="entregado"
+                                                                   value="true"
+                                                            @(certificado.Entregado ? "checked" : "") />
+
+                                                            <input type="hidden" name="entregado" value="false" />
+
+                                                            <label class="form-check-label">Entregado</label>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- OBSERVACIÓN -->
+                                                <div class="mt-3">
+                                                    <label class="form-label fw-semibold">
+                                                        Observación
+                                                    </label>
+
+                                                    <textarea name="observacion"
+                                                              class="form-control"
+                                                              rows="3">@certificado.Observacion</textarea>
+                                                </div>
+
+                                                <!-- SUBIR ARCHIVO -->
+                                                <div class="mt-3">
+                                                    <label class="form-label fw-semibold">
+                                                        Archivo del certificado
+                                                    </label>
+
+                                                    <input type="file"
+                                                           name="archivo"
+                                                           class="form-control"
+                                                           accept=".pdf,.doc,.docx,.xls,.xlsx" />
+
+                                                    <small class="text-muted">
+                                                        Formatos permitidos: PDF, Word y Excel. Tamaño máximo: 10 MB.
+                                                    </small>
+
+                                                    @if (!string.IsNullOrWhiteSpace(certificado.UrlArchivo))
+                                                    {
+                                                        <div class="mt-3 p-3 border rounded bg-light">
+                                                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                                <div>
+                                                                    <span class="text-success fw-semibold">
+                                                                        <i class="bi bi-file-earmark-check"></i>
+                                                                        Archivo guardado
+                                                                    </span>
+
+                                                                    <div class="small text-muted">
+                                                                        Puedes abrir el archivo actual o seleccionar uno nuevo para reemplazarlo.
+                                                                    </div>
+                                                                </div>
+
+                                                                <a href="@certificado.UrlArchivo"
+                                                                   target="_blank"
+                                                                   rel="noopener noreferrer"
+                                                                   class="btn btn-outline-primary btn-sm">
+                                                                    <i class="bi bi-eye"></i>
+                                                                    Ver archivo
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="mt-2">
+                                                            <span class="text-muted small">
+                                                                No hay ningún archivo subido.
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Cancelar
+                                                </button>
+
+                                                <button type="submit"
+                                                        class="btn btn-primary">
+                                                    Guardar Cambios
+                                                </button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    Volver a Cursos
+</a>
+
+<!-- MODAL PARA CONFIRMAR CAMBIO DE ESTADO -->
+<div class="modal fade"
+     id="modalConfirmarEstado"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold">
+                    Confirmar cambio de estado
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body text-center py-4">
+
+                <div class="mb-3">
+                    <span class="icono-alerta">!</span>
+                </div>
+
+                <h5 class="fw-bold mb-2">¿Estás seguro?</h5>
+
+                <p class="text-muted mb-2">
+                    Vas a cambiar el estado del certificado del alumno:
+                </p>
+
+                <p class="fw-bold mb-2" id="alumnoEstado"></p>
+
+                <p class="text-muted mb-0">
+                    Nuevo estado:
+                    <span id="nombreEstado" class="fw-bold text-dark"></span>
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <a href="#"
+                   id="btnConfirmarEstado"
+                   class="btn btn-warning fw-semibold">
+                    Sí, cambiar estado
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT DEL MODAL DE ESTADO -->
+<script>
+    const modalConfirmarEstado = document.getElementById('modalConfirmarEstado');
+
+    modalConfirmarEstado.addEventListener('show.bs.modal', function (event) {
+
+        const boton = event.relatedTarget;
+
+        const url = boton.getAttribute('data-url');
+        const estado = boton.getAttribute('data-estado');
+        const alumno = boton.getAttribute('data-alumno');
+        const estadoActual = boton.getAttribute('data-current');
+
+        let nuevoEstado;
+
+        if (estadoActual === "true") {
+            nuevoEstado = "Pendiente";
+        }
+        else {
+            nuevoEstado = "Tiqueado ✓";
+        }
+
+        document
+            .getElementById('btnConfirmarEstado')
+            .setAttribute('href', url);
+
+        document
+            .getElementById('nombreEstado')
+            .innerText = estado + " - " + nuevoEstado;
+
+        document
+            .getElementById('alumnoEstado')
+            .innerText = alumno;
+    });
+</script>
+
+<style>
+    .tabla-certificados th {
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    .tabla-certificados td {
+        vertical-align: middle;
+        min-width: 95px;
+    }
+
+    .estado-ok {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .estado-ok small {
+            font-size: 11px;
+            color: #6c757d;
+        }
+
+    .estado-pendiente {
+        background: #f8f9fa;
+        color: #6c757d;
+        border: 1px solid #dee2e6;
+        padding: 6px 10px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .estado-pendiente:hover {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+    .badge {
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .icono-alerta {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #ffc107;
+        color: #212529;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 38px;
+        font-weight: 800;
+    }
+</style>

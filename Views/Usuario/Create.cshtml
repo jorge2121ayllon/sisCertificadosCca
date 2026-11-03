@@ -1,0 +1,73 @@
+﻿@model Usuario
+
+@{
+    ViewData["Title"] = "Nuevo Usuario";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="card shadow border-0">
+                
+                <div class="card-header bg-dark text-white text-center">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-person-plus"></i> @ViewData["Title"]
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form asp-action="Create" method="post" novalidate>
+                        
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                        <!-- Usuario -->
+                        <div class="mb-3">
+                            <label asp-for="NombreUsuario" class="form-label fw-semibold"></label>
+                            <input asp-for="NombreUsuario" class="form-control" placeholder="Ej: admin123" />
+                            <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="correo@ejemplo.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Clave -->
+                        <div class="mb-3">
+                            <label asp-for="Clave" class="form-label fw-semibold"></label>
+                            <input asp-for="Clave" type="password" class="form-control" placeholder="••••••••" />
+                            <span asp-validation-for="Clave" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="mb-3">
+                            <label asp-for="Rol" class="form-label fw-semibold"></label>
+                            <select asp-for="Rol" class="form-select">
+                                <option value="">-- Seleccionar Rol --</option>
+                                <option>Admin</option>
+                                <option>Usuario</option>
+                            </select>
+                            <span asp-validation-for="Rol" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Volver
+                            </a>
+
+                            <button type="submit" class="btn btn-success d-flex align-items-center gap-2">
+                                <i class="bi bi-save"></i> Guardar
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

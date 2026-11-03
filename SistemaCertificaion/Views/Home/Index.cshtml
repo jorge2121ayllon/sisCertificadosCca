@@ -1,0 +1,1485 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Inicio - CCA del Sur";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CCA del Sur | Sistema de Certificados</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <style>
+            :root {
+                --celeste: #0284c7;
+                --azul: #075985;
+                --azul-oscuro: #0c2d48;
+                --celeste-claro: #e0f2fe;
+                --amarillo: #facc15;
+                --gris: #64748b;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                scroll-behavior: smooth;
+                min-height: 100%;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                font-family: "Segoe UI", Arial, sans-serif;
+                color: #1e293b;
+                background: #ffffff;
+                overflow-x: hidden;
+            }
+
+            /* ESTRUCTURA DE LA PAGINA */
+
+            .pagina {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .contenido {
+                flex: 1;
+            }
+
+            /* NAVBAR */
+
+            .navbar-cca {
+                background: #ffffff;
+                padding: 15px 0;
+                border-bottom: 3px solid var(--amarillo);
+                box-shadow: 0 4px 18px rgba(2, 132, 199, 0.06);
+                position: relative;
+                z-index: 1000;
+            }
+
+            .brand-cca {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                text-decoration: none;
+            }
+
+            .brand-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                background: linear-gradient(135deg, var(--celeste), var(--azul));
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 25px;
+                box-shadow: 0 6px 15px rgba(2, 132, 199, 0.18);
+            }
+
+            .brand-text {
+                display: flex;
+                flex-direction: column;
+                line-height: 1.2;
+            }
+
+                .brand-text strong {
+                    font-size: 18px;
+                    font-weight: 900;
+                    color: var(--azul);
+                }
+
+                .brand-text span {
+                    font-size: 10px;
+                    color: var(--gris);
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+
+            .navbar-cca .nav-link {
+                color: #334155;
+                font-weight: 600;
+                font-size: 14px;
+                transition: color 0.3s ease;
+            }
+
+                .navbar-cca .nav-link:hover {
+                    color: var(--celeste);
+                }
+
+            .btn-navbar {
+                background: var(--celeste);
+                color: white !important;
+                border-radius: 50px;
+                padding: 11px 22px !important;
+                font-weight: 700 !important;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+            }
+
+                .btn-navbar:hover {
+                    background: var(--azul);
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.22);
+                }
+
+            /* HERO */
+
+            .hero {
+                position: relative;
+                min-height: 580px;
+                display: flex;
+                align-items: center;
+                background: radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.18), transparent 30%), linear-gradient(135deg, #f0f9ff 0%, #ffffff 55%, #e0f2fe 100%);
+                overflow: hidden;
+            }
+
+                .hero::before {
+                    content: "";
+                    position: absolute;
+                    width: 450px;
+                    height: 450px;
+                    right: -120px;
+                    top: -150px;
+                    border-radius: 50%;
+                    border: 70px solid rgba(2, 132, 199, 0.05);
+                    animation: circuloFlotante 12s ease-in-out infinite;
+                }
+
+                .hero::after {
+                    content: "";
+                    position: absolute;
+                    width: 300px;
+                    height: 300px;
+                    left: -120px;
+                    bottom: -150px;
+                    border-radius: 50%;
+                    background: rgba(250, 204, 21, 0.10);
+                    animation: circuloFlotante 9s ease-in-out infinite reverse;
+                }
+
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                padding: 90px 0;
+                animation: deslizarArriba 0.9s ease-out both;
+            }
+
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                background: white;
+                border: 1px solid #bae6fd;
+                color: var(--azul);
+                padding: 10px 18px;
+                border-radius: 50px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 1px;
+                margin-bottom: 25px;
+                box-shadow: 0 5px 20px rgba(2, 132, 199, 0.05);
+            }
+
+                .hero-badge i {
+                    color: var(--celeste);
+                    font-size: 16px;
+                }
+
+            .hero h1 {
+                color: var(--azul-oscuro);
+                font-size: clamp(38px, 5vw, 65px);
+                font-weight: 900;
+                line-height: 1.12;
+                letter-spacing: -2px;
+                margin-bottom: 25px;
+            }
+
+            .texto-celeste {
+                color: var(--celeste);
+            }
+
+            .texto-amarillo {
+                position: relative;
+                display: inline-block;
+            }
+
+                .texto-amarillo::after {
+                    content: "";
+                    position: absolute;
+                    height: 7px;
+                    width: 100%;
+                    left: 0;
+                    bottom: -4px;
+                    border-radius: 10px;
+                    background: var(--amarillo);
+                }
+
+            .hero-description {
+                color: var(--gris);
+                font-size: 17px;
+                line-height: 1.9;
+                max-width: 590px;
+                margin-bottom: 35px;
+            }
+
+            /* BOTON CONSULTAR */
+
+            .btn-consultar {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                padding: 17px 30px;
+                border-radius: 50px;
+                color: white;
+                background: linear-gradient(135deg, var(--celeste), var(--azul));
+                font-size: 15px;
+                font-weight: 800;
+                text-decoration: none;
+                border: none;
+                box-shadow: 0 10px 25px rgba(2, 132, 199, 0.20);
+                transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+            }
+
+                .btn-consultar:hover {
+                    color: white;
+                    transform: translateY(-4px);
+                    box-shadow: 0 15px 30px rgba(2, 132, 199, 0.30);
+                    background: linear-gradient(135deg, var(--azul), #0369a1);
+                }
+
+                .btn-consultar:active {
+                    transform: scale(0.97);
+                }
+
+                .btn-consultar i {
+                    font-size: 18px;
+                    transition: transform 0.3s ease;
+                }
+
+                .btn-consultar:hover i:last-child {
+                    transform: translateX(4px);
+                }
+
+            /* ILUSTRACION */
+
+            .hero-visual {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 400px;
+                animation: aparecer 1s ease-out both;
+            }
+
+            .visual-circle {
+                position: relative;
+                width: min(390px, 100%);
+                aspect-ratio: 1;
+                border-radius: 50%;
+                background: linear-gradient(145deg, #dff4ff, #effaff);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(2, 132, 199, 0.12);
+            }
+
+                .visual-circle::before {
+                    content: "";
+                    position: absolute;
+                    inset: 20px;
+                    border-radius: 50%;
+                    border: 2px dashed rgba(2, 132, 199, 0.20);
+                    animation: rotar 35s linear infinite;
+                }
+
+            .documento {
+                position: relative;
+                width: 220px;
+                height: 285px;
+                background: white;
+                border-radius: 18px;
+                padding: 25px;
+                box-shadow: 0 25px 60px rgba(7, 89, 133, 0.15);
+                animation: documentoFlotante 5s ease-in-out infinite;
+            }
+
+            .documento-header {
+                width: 60px;
+                height: 60px;
+                background: #e0f2fe;
+                color: var(--celeste);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 15px;
+                font-size: 30px;
+                margin: 0 auto 20px;
+            }
+
+            .documento-linea {
+                height: 7px;
+                border-radius: 10px;
+                background: #e2e8f0;
+                margin: 12px auto;
+            }
+
+            .linea-1 {
+                width: 80%;
+                background: #bae6fd;
+            }
+
+            .linea-2 {
+                width: 100%;
+            }
+
+            .linea-3 {
+                width: 70%;
+            }
+
+            .linea-4 {
+                width: 90%;
+            }
+
+            .documento-sello {
+                width: 55px;
+                height: 55px;
+                border: 3px solid var(--amarillo);
+                border-radius: 50%;
+                color: #ca8a04;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 25px;
+                margin: 20px auto 0;
+                transform: rotate(-12deg);
+            }
+
+            .icono-flotante {
+                position: absolute;
+                width: 65px;
+                height: 65px;
+                border-radius: 18px;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                box-shadow: 0 12px 30px rgba(7, 89, 133, 0.10);
+                animation: iconoFlotante 4s ease-in-out infinite;
+            }
+
+            .icono-azul {
+                color: var(--celeste);
+                top: 30px;
+                right: 15px;
+            }
+
+            .icono-amarillo {
+                color: #ca8a04;
+                bottom: 40px;
+                left: 10px;
+                animation-delay: 1s;
+            }
+
+            /* FRANJA INSTITUCIONAL */
+
+            .franja {
+                background: white;
+                border-top: 1px solid #e0f2fe;
+                border-bottom: 1px solid #e0f2fe;
+                padding: 25px 0;
+            }
+
+            .franja-item {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 13px;
+                padding: 10px;
+            }
+
+            .franja-icono {
+                width: 45px;
+                height: 45px;
+                border-radius: 13px;
+                background: #e0f2fe;
+                color: var(--celeste);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 21px;
+                flex-shrink: 0;
+            }
+
+            .franja-texto {
+                display: flex;
+                flex-direction: column;
+            }
+
+                .franja-texto strong {
+                    color: var(--azul-oscuro);
+                    font-size: 14px;
+                    font-weight: 800;
+                }
+
+                .franja-texto span {
+                    color: var(--gris);
+                    font-size: 12px;
+                }
+
+            /* PRESENTACION */
+
+            .about {
+                padding: 100px 0;
+                background: white;
+            }
+
+            .section-label {
+                display: inline-block;
+                color: var(--celeste);
+                font-size: 12px;
+                font-weight: 900;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 17px;
+            }
+
+            .about h2 {
+                color: var(--azul-oscuro);
+                font-size: clamp(30px, 4vw, 45px);
+                font-weight: 900;
+                letter-spacing: -1px;
+                line-height: 1.25;
+                margin-bottom: 25px;
+            }
+
+                .about h2 span {
+                    color: var(--celeste);
+                }
+
+            .about-description {
+                color: var(--gris);
+                font-size: 16px;
+                line-height: 1.9;
+                max-width: 680px;
+                margin: 0 auto;
+            }
+
+            .about-decoration {
+                width: 75px;
+                height: 5px;
+                background: var(--amarillo);
+                border-radius: 10px;
+                margin: 0 auto 30px;
+            }
+
+            /* CONSULTA DE CERTIFICADOS */
+
+            .certificate-section {
+                padding: 80px 0;
+                background: linear-gradient(135deg, #e0f2fe, #f0f9ff 50%, #ffffff);
+                position: relative;
+                overflow: hidden;
+                border-top: 1px solid #dbeafe;
+                border-bottom: 1px solid #dbeafe;
+            }
+
+                .certificate-section::before {
+                    content: "";
+                    position: absolute;
+                    width: 280px;
+                    height: 280px;
+                    right: -100px;
+                    top: -100px;
+                    background: rgba(250, 204, 21, 0.12);
+                    border-radius: 50%;
+                }
+
+            .certificate-card {
+                position: relative;
+                z-index: 2;
+                max-width: 850px;
+                margin: 0 auto;
+                padding: 55px 35px;
+                text-align: center;
+                background: rgba(255, 255, 255, 0.85);
+                border: 1px solid rgba(186, 230, 253, 0.75);
+                border-radius: 28px;
+                box-shadow: 0 20px 60px rgba(7, 89, 133, 0.07);
+                transition: transform 0.4s ease, box-shadow 0.4s ease;
+            }
+
+                .certificate-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 25px 65px rgba(7, 89, 133, 0.12);
+                }
+
+            .certificate-icon {
+                width: 85px;
+                height: 85px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 24px;
+                margin: 0 auto 25px;
+                background: linear-gradient(135deg, var(--celeste), var(--azul));
+                color: white;
+                font-size: 38px;
+                box-shadow: 0 12px 30px rgba(2, 132, 199, 0.18);
+            }
+
+            .certificate-card h2 {
+                color: var(--azul-oscuro);
+                font-size: clamp(28px, 4vw, 40px);
+                font-weight: 900;
+                margin-bottom: 18px;
+                letter-spacing: -1px;
+            }
+
+            .certificate-card p {
+                color: var(--gris);
+                font-size: 15px;
+                line-height: 1.8;
+                max-width: 570px;
+                margin: 0 auto 30px;
+            }
+
+            /* UBICACION */
+
+            .location {
+                padding: 75px 0;
+                background: white;
+                margin: 0;
+            }
+
+            .location-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 18px;
+                text-align: left;
+            }
+
+            .location-icon {
+                width: 65px;
+                height: 65px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--celeste);
+                background: #e0f2fe;
+                border-radius: 20px;
+                font-size: 28px;
+                transition: transform 0.3s ease, background 0.3s ease;
+            }
+
+            .location-content:hover .location-icon {
+                transform: translateY(-4px);
+                background: #bae6fd;
+            }
+
+            .location h3 {
+                color: var(--azul-oscuro);
+                font-size: 19px;
+                font-weight: 900;
+                margin-bottom: 7px;
+            }
+
+            .location p {
+                color: var(--gris);
+                font-size: 14px;
+                line-height: 1.7;
+                margin: 0;
+            }
+
+            .location a {
+                color: var(--celeste);
+                font-size: 13px;
+                font-weight: 800;
+                text-decoration: none;
+                display: inline-block;
+                margin-top: 8px;
+                transition: color 0.3s ease;
+            }
+
+                .location a:hover {
+                    color: var(--azul);
+                }
+
+            /* FOOTER */
+
+            .footer {
+                flex-shrink: 0;
+                margin-top: auto;
+                width: 100%;
+                background: var(--azul-oscuro);
+                color: #cbd5e1;
+                position: relative;
+                overflow: hidden;
+                border-top: 4px solid var(--amarillo);
+            }
+
+                .footer::before {
+                    content: "";
+                    position: absolute;
+                    top: -100px;
+                    right: -100px;
+                    width: 280px;
+                    height: 280px;
+                    border-radius: 50%;
+                    background: rgba(56, 189, 248, 0.06);
+                    pointer-events: none;
+                }
+
+            .footer-main {
+                padding: 40px 0 30px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .footer-brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+
+            .footer-brand-icon {
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--celeste);
+                color: white;
+                border-radius: 12px;
+                font-size: 23px;
+            }
+
+            .footer-brand strong {
+                color: white;
+                font-size: 18px;
+                font-weight: 800;
+            }
+
+            .footer-description {
+                color: #94a3b8;
+                font-size: 14px;
+                line-height: 1.8;
+                max-width: 400px;
+            }
+
+            .footer-title {
+                color: white;
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 18px;
+            }
+
+            .footer-contact {
+                display: flex;
+                flex-direction: column;
+                gap: 13px;
+            }
+
+            .footer-contact-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                font-size: 13px;
+                color: #cbd5e1;
+            }
+
+                .footer-contact-item i {
+                    color: var(--amarillo);
+                    font-size: 16px;
+                    margin-top: 1px;
+                }
+
+                .footer-contact-item a {
+                    color: #cbd5e1;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                    .footer-contact-item a:hover {
+                        color: white;
+                    }
+
+            .footer-bottom {
+                border-top: 1px solid rgba(255, 255, 255, 0.10);
+                padding: 17px 0;
+                background: rgba(0, 0, 0, 0.10);
+                position: relative;
+                z-index: 1;
+            }
+
+                .footer-bottom p {
+                    margin: 0;
+                    font-size: 12px;
+                    color: #94a3b8;
+                    text-align: center;
+                }
+
+                .footer-bottom span {
+                    color: var(--amarillo);
+                    font-weight: 700;
+                }
+
+            /* ANIMACIONES */
+
+            .revelar {
+                opacity: 0;
+                transform: translateY(25px);
+                transition: opacity 0.7s ease, transform 0.7s ease;
+            }
+
+                .revelar.visible {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+            @@keyframes aparecer {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @@keyframes deslizarArriba {
+                from {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @@keyframes documentoFlotante {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-12px);
+                }
+            }
+
+            @@keyframes iconoFlotante {
+                0%, 100% {
+                    transform: translateY(0) rotate(0deg);
+                }
+
+                50% {
+                    transform: translateY(-10px) rotate(4deg);
+                }
+            }
+
+            @@keyframes circuloFlotante {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(20px);
+                }
+            }
+
+            @@keyframes rotar {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* RESPONSIVE */
+
+            @@media (max-width: 991px) {
+                .navbar-cca .navbar-collapse {
+                    padding-top: 15px;
+                }
+
+                .navbar-cca .nav-link {
+                    padding: 12px 0;
+                }
+
+                .btn-navbar {
+                    justify-content: center;
+                    margin-top: 10px;
+                }
+
+                .hero {
+                    min-height: auto;
+                }
+
+                .hero-content {
+                    padding: 70px 0 40px;
+                    text-align: center;
+                }
+
+                .hero-description {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                .hero-visual {
+                    min-height: 350px;
+                    padding-bottom: 50px;
+                }
+
+                .visual-circle {
+                    width: 320px;
+                }
+
+                .about {
+                    padding: 75px 0;
+                }
+
+                .certificate-section {
+                    padding: 65px 0;
+                }
+
+                .location {
+                    padding: 60px 0;
+                }
+
+                .footer-main {
+                    padding: 35px 0 25px;
+                }
+            }
+
+            @@media (max-width: 576px) {
+                .brand-icon {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 22px;
+                }
+
+                .brand-text strong {
+                    font-size: 16px;
+                }
+
+                .brand-text span {
+                    font-size: 9px;
+                }
+
+                .hero-content {
+                    padding: 55px 0 25px;
+                }
+
+                .hero h1 {
+                    letter-spacing: -1px;
+                    font-size: 38px;
+                }
+
+                .hero-description {
+                    font-size: 15px;
+                }
+
+                .btn-consultar {
+                    width: 100%;
+                    padding: 16px 20px;
+                }
+
+                .hero-visual {
+                    min-height: 300px;
+                }
+
+                .visual-circle {
+                    width: 270px;
+                }
+
+                .documento {
+                    width: 175px;
+                    height: 230px;
+                    padding: 18px;
+                }
+
+                .documento-header {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 25px;
+                }
+
+                .documento-sello {
+                    width: 45px;
+                    height: 45px;
+                    font-size: 20px;
+                    margin-top: 10px;
+                }
+
+                .icono-flotante {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 22px;
+                    border-radius: 14px;
+                }
+
+                .about {
+                    padding: 60px 0;
+                }
+
+                    .about h2 {
+                        font-size: 30px;
+                    }
+
+                .certificate-section {
+                    padding: 45px 0;
+                }
+
+                .certificate-card {
+                    padding: 40px 22px;
+                    border-radius: 22px;
+                }
+
+                .certificate-icon {
+                    width: 70px;
+                    height: 70px;
+                    font-size: 32px;
+                }
+
+                .certificate-card h2 {
+                    font-size: 29px;
+                }
+
+                .location-content {
+                    gap: 13px;
+                }
+
+                .location-icon {
+                    width: 55px;
+                    height: 55px;
+                    font-size: 23px;
+                    border-radius: 15px;
+                }
+
+                .location h3 {
+                    font-size: 17px;
+                }
+
+                .footer-main {
+                    text-align: center;
+                }
+
+                .footer-brand {
+                    justify-content: center;
+                }
+
+                .footer-description {
+                    margin: 0 auto;
+                }
+
+                .footer-contact-item {
+                    justify-content: center;
+                    text-align: left;
+                }
+            }
+
+            @@media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
+
+                .revelar {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="pagina">
+
+        <!-- NAVBAR -->
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-cca">
+                <div class="container">
+
+                    <a class="brand-cca" href="/">
+                        <div class="brand-icon">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+
+                        <div class="brand-text">
+                            <strong>CCA DEL SUR</strong>
+                            <span>Sistema de Certificados</span>
+                        </div>
+                    </a>
+
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#menuCCA"
+                            aria-controls="menuCCA"
+                            aria-expanded="false"
+                            aria-label="Abrir menú">
+
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="menuCCA">
+
+                        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">
+                                    Inicio
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link btn-navbar"
+                                   href="/Alumno/Buscar">
+
+                                    <i class="bi bi-search"></i>
+                                    Consultar certificados
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="contenido">
+
+            <!-- PORTADA -->
+            <section class="hero">
+
+                <div class="container">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-7">
+
+                            <div class="hero-content">
+
+                                <div class="hero-badge">
+                                    <i class="bi bi-mortarboard-fill"></i>
+                                    Centro de capacitación CCA del Sur
+                                </div>
+
+                                <h1>
+                                    Tu formación,
+                                    <span class="texto-celeste">tu esfuerzo</span>,
+                                    <span class="texto-amarillo">tu certificado.</span>
+                                </h1>
+
+                                <p class="hero-description">
+                                    En CCA del Sur valoramos tu preparación y dedicación.
+                                    Accede a nuestro sistema de consulta y encuentra
+                                    la información de tus certificados de manera
+                                    sencilla, rápida y segura.
+                                </p>
+
+                                <a href="/Alumno/Buscar"
+                                   class="btn-consultar">
+
+                                    <i class="bi bi-search"></i>
+                                    Consultar certificados
+                                    <i class="bi bi-arrow-right"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-5">
+
+                            <div class="hero-visual">
+
+                                <div class="visual-circle">
+
+                                    <div class="documento">
+
+                                        <div class="documento-header">
+                                            <i class="bi bi-file-earmark-check-fill"></i>
+                                        </div>
+
+                                        <div class="documento-linea linea-1"></div>
+                                        <div class="documento-linea linea-2"></div>
+                                        <div class="documento-linea linea-3"></div>
+                                        <div class="documento-linea linea-4"></div>
+
+                                        <div class="documento-sello">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="icono-flotante icono-azul">
+                                        <i class="bi bi-mortarboard-fill"></i>
+                                    </div>
+
+                                    <div class="icono-flotante icono-amarillo">
+                                        <i class="bi bi-patch-check-fill"></i>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- FRANJA INSTITUCIONAL -->
+            <section class="franja">
+
+                <div class="container">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+
+                            <div class="franja-item revelar">
+
+                                <div class="franja-icono">
+                                    <i class="bi bi-book-half"></i>
+                                </div>
+
+                                <div class="franja-texto">
+                                    <strong>Formación académica</strong>
+                                    <span>Preparación para el futuro</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="franja-item revelar">
+
+                                <div class="franja-icono">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                </div>
+
+                                <div class="franja-texto">
+                                    <strong>Consulta de certificados</strong>
+                                    <span>Información accesible</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="franja-item revelar">
+
+                                <div class="franja-icono">
+                                    <i class="bi bi-person-workspace"></i>
+                                </div>
+
+                                <div class="franja-texto">
+                                    <strong>Desarrollo profesional</strong>
+                                    <span>Impulsando oportunidades</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PRESENTACION -->
+            <section class="about">
+
+                <div class="container text-center">
+
+                    <div class="revelar">
+
+                        <span class="section-label">
+                            Nuestra institución
+                        </span>
+
+                        <h2>
+                            Educación para un
+                            <span>mejor futuro</span>
+                        </h2>
+
+                        <div class="about-decoration"></div>
+
+                        <p class="about-description">
+                            El Centro de Capacitación CCA del Sur está comprometido
+                            con la formación y el crecimiento de sus estudiantes.
+                            A través de nuestro sistema de certificados, facilitamos
+                            el acceso a la información académica, brindando una
+                            experiencia práctica y organizada.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- CONSULTAR CERTIFICADOS -->
+            <section class="certificate-section">
+
+                <div class="container">
+
+                    <div class="certificate-card revelar">
+
+                        <div class="certificate-icon">
+                            <i class="bi bi-file-earmark-check-fill"></i>
+                        </div>
+
+                        <span class="section-label">
+                            Sistema de certificados
+                        </span>
+
+                        <h2>
+                            Consulta tus certificados
+                        </h2>
+
+                        <p>
+                            ¿Necesitas consultar la información de tu certificado?
+                            Ingresa a nuestro sistema y realiza tu consulta de forma
+                            fácil y rápida.
+                        </p>
+
+                        <a href="/Alumno/Buscar"
+                           class="btn-consultar">
+
+                            <i class="bi bi-search"></i>
+                            Consultar certificados
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- UBICACION -->
+            <section class="location">
+
+                <div class="container">
+
+                    <div class="location-content revelar">
+
+                        <div class="location-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+
+                        <div>
+
+                            <span class="section-label">
+                                Estamos en Tarija
+                            </span>
+
+                            <h3>CCA del Sur</h3>
+
+                            <p>
+                                Calle La Madrid N.º 741,
+                                Tarija, Bolivia.
+                            </p>
+
+                            <a href="https://www.google.com/maps/search/?api=1&query=CCA+del+Sur+La+Madrid+741+Tarija+Bolivia"
+                               target="_blank"
+                               rel="noopener noreferrer">
+
+                                <i class="bi bi-map"></i>
+                                Ver ubicación en Google Maps
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+
+            <div class="footer-main">
+
+                <div class="container">
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-7">
+
+                            <div class="footer-brand">
+
+                                <div class="footer-brand-icon">
+                                    <i class="bi bi-mortarboard-fill"></i>
+                                </div>
+
+                                <strong>CCA DEL SUR</strong>
+
+                            </div>
+
+                            <p class="footer-description">
+                                Centro de capacitación comprometido con la
+                                formación académica y el desarrollo profesional
+                                de sus estudiantes en la ciudad de Tarija.
+                            </p>
+
+                        </div>
+
+                        <div class="col-lg-5">
+
+                            <h5 class="footer-title">
+                                Información de contacto
+                            </h5>
+
+                            <div class="footer-contact">
+
+                                <div class="footer-contact-item">
+                                    <i class="bi bi-geo-alt-fill"></i>
+
+                                    <span>
+                                        Calle La Madrid N.º 741,
+                                        Tarija, Bolivia
+                                    </span>
+                                </div>
+
+                                <div class="footer-contact-item">
+                                    <i class="bi bi-globe"></i>
+
+                                    <a href="https://www.cca.edu.bo/#/Tarija"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
+
+                                        www.cca.edu.bo
+
+                                    </a>
+                                </div>
+
+                                <div class="footer-contact-item">
+                                    <i class="bi bi-patch-check-fill"></i>
+
+                                    <span>
+                                        Sistema de consulta de certificados
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+
+                <div class="container">
+
+                    <p>
+                        © @DateTime.Now.Year
+                        <span>CCA DEL SUR</span>.
+                        Todos los derechos reservados.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const elementos = document.querySelectorAll(".revelar");
+
+                if ("IntersectionObserver" in window) {
+
+                    const observador = new IntersectionObserver(
+                        function (entradas) {
+
+                            entradas.forEach(function (entrada) {
+
+                                if (entrada.isIntersecting) {
+
+                                    entrada.target.classList.add("visible");
+
+                                    observador.unobserve(entrada.target);
+                                }
+
+                            });
+
+                        },
+                        {
+                            threshold: 0.15
+                        }
+                    );
+
+                    elementos.forEach(function (elemento) {
+                        observador.observe(elemento);
+                    });
+
+                } else {
+
+                    elementos.forEach(function (elemento) {
+                        elemento.classList.add("visible");
+                    });
+
+                }
+
+            });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,730 @@
+﻿@model SistemaCertificaion.Models.Alumno
+
+@{
+    ViewData["Title"] = "Consulta de Certificados";
+}
+
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --background: #f4f7fb;
+        --text-dark: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --success: #16a34a;
+        --pending: #f59e0b;
+    }
+
+    body {
+        background: var(--background);
+    }
+
+    .consulta-container {
+        max-width: 1100px;
+        margin: 35px auto;
+        padding: 20px;
+    }
+
+    .consulta-header {
+        background: linear-gradient(135deg, #1e40af, #2563eb);
+        color: white;
+        padding: 35px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+    }
+
+        .consulta-header h2 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .consulta-header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+    .search-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+    }
+
+    .search-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .search-form input {
+            flex: 1;
+            min-width: 220px;
+            padding: 13px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+            .search-form input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            }
+
+    .btn-consultar {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        .btn-consultar:hover {
+            background: var(--primary-dark);
+        }
+
+    .alumno-card {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        margin-bottom: 25px;
+    }
+
+        .alumno-card h4 {
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+    .alumno-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .dato-label {
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .dato-valor {
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 30px 0 18px;
+    }
+
+    /* Dropdown de cursos */
+
+    .curso-dropdown {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+        transition: 0.2s;
+    }
+
+        .curso-dropdown[open] {
+            border-color: #bfdbfe;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+        }
+
+    .curso-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 22px 25px;
+        cursor: pointer;
+        list-style: none;
+    }
+
+        .curso-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .curso-summary:hover {
+            background: #f8fafc;
+        }
+
+    .curso-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .curso-icon {
+        width: 48px;
+        height: 48px;
+        background: #eff6ff;
+        color: var(--primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .curso-nombre {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+    }
+
+    .curso-subtitulo {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .curso-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .dropdown-label {
+        color: var(--primary);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .dropdown-arrow {
+        color: var(--primary);
+        font-size: 20px;
+        transition: transform 0.2s;
+    }
+
+    .curso-dropdown[open] .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    .curso-content {
+        padding: 25px;
+        border-top: 1px solid var(--border);
+        background: #fcfdff;
+    }
+
+    .certificado-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 20px;
+    }
+
+        .certificado-card:last-child {
+            margin-bottom: 0;
+        }
+
+    .certificado-title {
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    /* Etapas del certificado */
+
+    .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .timeline-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        background: #fff;
+    }
+
+        .timeline-item.completed {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+
+        .timeline-item.pending {
+            border-color: #fde68a;
+            background: #fffbeb;
+        }
+
+    .timeline-status {
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .timeline-item.completed .timeline-status {
+        color: var(--success);
+    }
+
+    .timeline-item.pending .timeline-status {
+        color: #b45309;
+    }
+
+    .timeline-name {
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 7px;
+    }
+
+    .timeline-date {
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    /* Documento PDF */
+
+    .documento-section {
+        margin-top: 20px;
+    }
+
+    .documento-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+        .documento-header h5 {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+    .documento-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-documento {
+        display: inline-block;
+        text-decoration: none;
+        padding: 9px 15px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        color: var(--text-dark);
+        background: white;
+    }
+
+        .btn-documento:hover {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+    .pdf-preview {
+        width: 100%;
+        height: 600px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #f1f5f9;
+    }
+
+    .documento-vacio {
+        padding: 25px;
+        text-align: center;
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        color: var(--text-muted);
+    }
+
+    .alerta-vacia {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 25px;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    @@media (max-width: 768px) {
+        .consulta-container {
+            padding: 12px;
+            margin: 15px auto;
+        }
+
+        .consulta-header {
+            padding: 25px;
+        }
+
+        .timeline {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .curso-summary {
+            padding: 17px;
+        }
+
+        .curso-content {
+            padding: 15px;
+        }
+
+        .pdf-preview {
+            height: 400px;
+        }
+
+        .dropdown-label {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .timeline {
+            grid-template-columns: 1fr;
+        }
+
+        .curso-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .curso-nombre {
+            font-size: 15px;
+        }
+
+        .curso-right {
+            gap: 8px;
+        }
+    }
+</style>
+
+<div class="consulta-container">
+
+    <!-- Encabezado -->
+
+    <div class="consulta-header">
+        <h2>Consulta de Certificados</h2>
+        <p>Consulta el estado de tus certificados y revisa tus documentos.</p>
+    </div>
+
+    <!-- Formulario de búsqueda -->
+
+    <div class="search-card">
+        <h4 class="mb-3">Buscar estudiante</h4>
+
+        <form asp-action="Buscar" method="post" class="search-form">
+            <input type="text"
+                   name="ci"
+                   class="form-control"
+                   placeholder="Ingresa tu número de CI"
+                   required />
+
+            <button type="submit" class="btn-consultar">
+                Consultar
+            </button>
+        </form>
+    </div>
+
+    @if (Model != null)
+    {
+        <!-- Información del alumno -->
+
+        <div class="alumno-card">
+            <h4>Información del estudiante</h4>
+
+            <div class="alumno-grid">
+                <div>
+                    <div class="dato-label">Nombre completo</div>
+                    <div class="dato-valor">
+                        @Model.Nombres @Model.Apellidos
+                    </div>
+                </div>
+
+                <div>
+                    <div class="dato-label">Carnet de identidad</div>
+                    <div class="dato-valor">
+                        @Model.Ci
+                    </div>
+                </div>
+
+                <div>
+                    <div class="dato-label">Correo electrónico</div>
+                    <div class="dato-valor">
+                        @(Model.Email ?? "No registrado")
+                    </div>
+                </div>
+
+                <div>
+                    <div class="dato-label">Celular</div>
+                    <div class="dato-valor">
+                        @(Model.Celular ?? "No registrado")
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cursos desplegables -->
+
+        <h3 class="section-title">Mis cursos y certificados</h3>
+
+        @if (Model.Inscripciones != null && Model.Inscripciones.Any())
+        {
+            @foreach (var inscripcion in Model.Inscripciones)
+            {
+                <details class="curso-dropdown">
+
+                    <summary class="curso-summary">
+                        <div class="curso-info">
+                            <div class="curso-icon">
+                                📚
+                            </div>
+
+                            <div>
+                                <div class="curso-nombre">
+                                    @(inscripcion.Curso?.Nombre ?? "Curso sin nombre")
+                                </div>
+
+                                <div class="curso-subtitulo">
+                                    Consulta el proceso de tu certificado
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="curso-right">
+                            <span class="dropdown-label">
+                                Ver detalles
+                            </span>
+
+                            <span class="dropdown-arrow">
+                                ▼
+                            </span>
+                        </div>
+                    </summary>
+
+                    <div class="curso-content">
+
+                        @if (inscripcion.Certificaciones != null &&
+                             inscripcion.Certificaciones.Any())
+                        {
+                            @foreach (var certificado in inscripcion.Certificaciones)
+                            {
+                                <div class="certificado-card">
+
+                                    <div class="certificado-title">
+                                        Estado del certificado
+                                    </div>
+
+                                    <!-- Fechas del proceso -->
+
+                                    <div class="timeline">
+
+                                        <!-- Proceso completado -->
+
+                                        <div class="timeline-item
+                                            @(certificado.FechaProceso.HasValue
+    ? "completed"
+    : "pending")">
+
+                                            <div class="timeline-status">
+                                                @(certificado.FechaProceso.HasValue
+                                                    ? "✓ COMPLETADO"
+                                                    : "⏳ PENDIENTE")
+                                            </div>
+
+                                            <div class="timeline-name">
+                                                Proceso Completado
+                                            </div>
+
+                                            <div class="timeline-date">
+                                                @(certificado.FechaProceso.HasValue
+                                                    ? certificado.FechaProceso.Value.ToString("dd/MM/yyyy")
+                                                    : "Sin fecha registrada")
+                                            </div>
+                                        </div>
+
+                                        <!-- Certificado generado -->
+
+                                        <div class="timeline-item
+                                            @(certificado.FechaGenerado.HasValue
+    ? "completed"
+    : "pending")">
+
+                                            <div class="timeline-status">
+                                                @(certificado.FechaGenerado.HasValue
+                                                    ? "✓ COMPLETADO"
+                                                    : "⏳ PENDIENTE")
+                                            </div>
+
+                                            <div class="timeline-name">
+                                                Certificado Generado
+                                            </div>
+
+                                            <div class="timeline-date">
+                                                @(certificado.FechaGenerado.HasValue
+                                                    ? certificado.FechaGenerado.Value.ToString("dd/MM/yyyy")
+                                                    : "Sin fecha registrada")
+                                            </div>
+                                        </div>
+
+                                        <!-- Certificado impreso -->
+
+                                        <div class="timeline-item
+                                            @(certificado.FechaImpresion.HasValue
+    ? "completed"
+    : "pending")">
+
+                                            <div class="timeline-status">
+                                                @(certificado.FechaImpresion.HasValue
+                                                    ? "✓ COMPLETADO"
+                                                    : "⏳ PENDIENTE")
+                                            </div>
+
+                                            <div class="timeline-name">
+                                                Certificado Impreso
+                                            </div>
+
+                                            <div class="timeline-date">
+                                                @(certificado.FechaImpresion.HasValue
+                                                    ? certificado.FechaImpresion.Value.ToString("dd/MM/yyyy")
+                                                    : "Sin fecha registrada")
+                                            </div>
+                                        </div>
+
+                                        <!-- Certificado entregado -->
+
+                                        <div class="timeline-item
+                                            @(certificado.FechaEntregado.HasValue
+    ? "completed"
+    : "pending")">
+
+                                            <div class="timeline-status">
+                                                @(certificado.FechaEntregado.HasValue
+                                                    ? "✓ COMPLETADO"
+                                                    : "⏳ PENDIENTE")
+                                            </div>
+
+                                            <div class="timeline-name">
+                                                Certificado Entregado
+                                            </div>
+
+                                            <div class="timeline-date">
+                                                @(certificado.FechaEntregado.HasValue
+                                                    ? certificado.FechaEntregado.Value.ToString("dd/MM/yyyy")
+                                                    : "Sin fecha registrada")
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Vista previa del documento -->
+
+                                    <div class="documento-section">
+
+                                        <div class="documento-header">
+                                            <h5>Documento del certificado</h5>
+
+                                            @if (!string.IsNullOrEmpty(certificado.UrlArchivo))
+                                            {
+                                                <div class="documento-actions">
+
+                                                    <a href="@certificado.UrlArchivo"
+                                                       target="_blank"
+                                                       class="btn-documento">
+                                                        Abrir documento
+                                                    </a>
+
+                                                    <a href="@certificado.UrlArchivo"
+                                                       download
+                                                       class="btn-documento">
+                                                        Descargar
+                                                    </a>
+
+                                                </div>
+                                            }
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(certificado.UrlArchivo))
+                                        {
+                                            @if (certificado.UrlArchivo
+                                                .EndsWith(".pdf",
+                                                    StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <iframe src="@certificado.UrlArchivo"
+                                                        class="pdf-preview"
+                                                        title="Vista previa del certificado">
+                                                </iframe>
+                                            }
+                                            else
+                                            {
+                                                <div class="documento-vacio">
+                                                    El documento está disponible,
+                                                    pero no se puede visualizar
+                                                    directamente aquí.
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="documento-vacio">
+                                                <div style="font-size: 30px; margin-bottom: 10px;">
+                                                    📄
+                                                </div>
+
+                                                <strong>Documento pendiente</strong>
+
+                                                <p class="mb-0">
+                                                    Aún no se ha generado o cargado
+                                                    el certificado.
+                                                </p>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alerta-vacia">
+                                <strong>Certificado pendiente</strong>
+
+                                <p class="mb-0">
+                                    Este curso todavía no tiene un certificado registrado.
+                                </p>
+                            </div>
+                        }
+
+                    </div>
+                </details>
+            }
+        }
+        else
+        {
+            <div class="alerta-vacia">
+                <h5>No tienes cursos registrados</h5>
+
+                <p class="mb-0">
+                    No se encontraron inscripciones asociadas a tu cuenta.
+                </p>
+            </div>
+        }
+    }
+</div>

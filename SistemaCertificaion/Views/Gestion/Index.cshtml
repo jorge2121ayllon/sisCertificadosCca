@@ -1,0 +1,1745 @@
+﻿@model SistemaCertificaion.ViewModels.GestionAcademicaViewModel
+
+@{
+    ViewData["Title"] = "Gestión Académica";
+}
+
+<div class="gestion-container">
+
+    <!-- ENCABEZADO -->
+    <div class="gestion-header">
+        <div>
+            <span class="gestion-subtitle">SISTEMA DE ADMINISTRACIÓN</span>
+            <h2>Gestión Académica</h2>
+            <p>Control de cursos, alumnos, inscripciones y proceso de certificación.</p>
+        </div>
+
+        <div class="header-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+    </div>
+
+    <!-- MENSAJES -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- SELECCIÓN DE CURSO Y REGISTRO -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-5">
+            <div class="panel-card h-100">
+
+                <div class="panel-heading">
+                    <div class="panel-heading-icon blue">
+                        <i class="bi bi-book-fill"></i>
+                    </div>
+                    <div>
+                        <h5>Seleccionar curso</h5>
+                        <small>Consultar la gestión académica</small>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <form asp-action="Index" method="get">
+
+                        <label class="form-label">Curso académico</label>
+
+                        <select name="cursoId" class="form-select mb-3">
+                            <option value="">Seleccione un curso</option>
+
+                            @foreach (var curso in Model.Cursos)
+                            {
+                                if (curso.Id == Model.CursoId)
+                                {
+                                    <option value="@curso.Id" selected>
+                                        @curso.Codigo - @curso.Nombre
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@curso.Id">
+                                        @curso.Codigo - @curso.Nombre
+                                    </option>
+                                }
+                            }
+                        </select>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-2"></i>
+                            Cargar curso
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="panel-card h-100">
+
+                <div class="panel-heading">
+                    <div class="panel-heading-icon green">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </div>
+                    <div>
+                        <h5>Registrar nuevo curso</h5>
+                        <small>Crear una nueva actividad académica</small>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <form asp-action="CrearCurso" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-3">
+
+                            <div class="col-md-3">
+                                <label class="form-label">Código</label>
+                                <input asp-for="NuevoCurso.Codigo"
+                                       class="form-control"
+                                       required />
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Nombre del curso</label>
+                                <input asp-for="NuevoCurso.Nombre"
+                                       class="form-control"
+                                       required />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Inicio</label>
+                                <input asp-for="NuevoCurso.FechaInicio"
+                                       type="date"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Fin</label>
+                                <input asp-for="NuevoCurso.FechaFin"
+                                       type="date"
+                                       class="form-control" />
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-3">
+                            <i class="bi bi-save me-2"></i>
+                            Registrar curso
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    @if (Model.CursoSeleccionado != null)
+    {
+        <!-- INFORMACIÓN DEL CURSO -->
+        <div class="curso-banner mb-4">
+
+            <div class="curso-banner-info">
+                <span class="curso-label">
+                    CURSO SELECCIONADO
+                </span>
+
+                <h3>@Model.CursoSeleccionado.Nombre</h3>
+
+                <p>
+                    <i class="bi bi-upc-scan me-2"></i>
+                    Código:
+                    <strong>@Model.CursoSeleccionado.Codigo</strong>
+                </p>
+            </div>
+
+            <div class="curso-banner-status">
+                <span class="status-dot"></span>
+                Curso activo
+            </div>
+
+        </div>
+
+        <!-- ESTADÍSTICAS -->
+        <div class="row g-3 mb-4">
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <span>Alumnos inscritos</span>
+                        <h2>@Model.TotalInscritos</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+                    <div>
+                        <span>Certificados registrados</span>
+                        <h2>@Model.TotalCertificados</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div>
+                        <span>Certificados entregados</span>
+                        <h2>@Model.TotalEntregados</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card stat-orange">
+                    <div class="stat-icon">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div>
+                        <span>Pendientes de entrega</span>
+                        <h2>@Model.TotalPendientes</h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- INSCRIBIR ALUMNO EXISTENTE -->
+        <div class="panel-card mb-4">
+
+            <div class="panel-heading">
+                <div class="panel-heading-icon cyan">
+                    <i class="bi bi-person-plus-fill"></i>
+                </div>
+                <div>
+                    <h5>Inscribir alumno existente</h5>
+                    <small>Agregar un alumno registrado al curso</small>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <form asp-action="InscribirAlumno" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="cursoId"
+                           value="@Model.CursoId" />
+
+                    <div class="row g-3">
+
+                        <div class="col-md-9">
+                            <label class="form-label">Seleccionar alumno</label>
+
+                            <select name="alumnoId" class="form-select" required>
+                                <option value="">Seleccione un alumno</option>
+
+                                @foreach (var alumno in Model.Alumnos)
+                                {
+                                    <option value="@alumno.Id">
+                                        @alumno.Apellidos, @alumno.Nombres - @alumno.Ci
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-info text-white w-100">
+                                <i class="bi bi-person-check-fill me-2"></i>
+                                Inscribir alumno
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!-- REGISTRAR ALUMNO NUEVO -->
+        <div class="panel-card mb-4">
+
+            <div class="panel-heading">
+                <div class="panel-heading-icon orange">
+                    <i class="bi bi-person-vcard-fill"></i>
+                </div>
+                <div>
+                    <h5>Registrar alumno e inscribir</h5>
+                    <small>Crear un nuevo alumno y asignarlo al curso</small>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <form asp-action="CrearAlumnoInscribir" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="cursoId"
+                           value="@Model.CursoId" />
+
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <label class="form-label">Nombres</label>
+                            <input name="Nombres"
+                                   class="form-control"
+                                   required />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Apellidos</label>
+                            <input name="Apellidos"
+                                   class="form-control"
+                                   required />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">CI</label>
+                            <input name="Ci"
+                                   class="form-control" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Celular</label>
+                            <input name="Celular"
+                                   class="form-control" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Correo electrónico</label>
+                            <input name="Email"
+                                   type="email"
+                                   class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-warning mt-3">
+                        <i class="bi bi-person-plus-fill me-2"></i>
+                        Registrar e inscribir
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- PROCESO DE CERTIFICACIÓN -->
+        <div class="panel-card">
+
+            <div class="certificado-heading">
+
+                <div class="certificado-heading-left">
+                    <div class="panel-heading-icon navy">
+                        <i class="bi bi-file-earmark-medical-fill"></i>
+                    </div>
+
+                    <div>
+                        <h5>Proceso de certificación</h5>
+                        <small>Seguimiento de las etapas de cada certificado</small>
+                    </div>
+                </div>
+
+                <div class="process-legend">
+                    <span>
+                        <i class="legend-circle completed"></i>
+                        Completado
+                    </span>
+                    <span>
+                        <i class="legend-circle pending"></i>
+                        Pendiente
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table certificate-table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th class="student-column">Alumno</th>
+                            <th>CI</th>
+                            <th>ISPI</th>
+                            <th>Proceso</th>
+                            <th>Generado</th>
+                            <th>Impresión</th>
+                            <th>DNA</th>
+                            <th>Finalizado</th>
+                            <th>SMS retiro</th>
+                            <th>Entregado</th>
+                            <th>Observación / Archivo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.Inscripciones)
+                        {
+                            var certificado = item.Certificaciones
+                                .FirstOrDefault(c => c.Activo);
+
+                            <tr>
+
+                                <td class="student-column">
+                                    <div class="student-info">
+                                        <div class="student-avatar">
+                                            @item.Alumno.Nombres.Substring(0, 1)
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                @item.Alumno.Nombres
+                                                @item.Alumno.Apellidos
+                                            </strong>
+                                            <small>Alumno inscrito</small>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="ci-badge">
+                                        @item.Alumno.Ci
+                                    </span>
+                                </td>
+
+                                @if (certificado == null)
+                                {
+                                    <td colspan="8">
+                                        <div class="no-certificate">
+                                            <i class="bi bi-file-earmark-x"></i>
+                                            <span>Certificado no registrado</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="text-muted small">
+                                            Sin observación
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <form asp-action="AgregarCertificado"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="inscripcionId"
+                                                   value="@item.Id" />
+
+                                            <input type="hidden"
+                                                   name="cursoId"
+                                                   value="@Model.CursoId" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-success">
+                                                <i class="bi bi-plus-circle me-1"></i>
+                                                Crear
+                                            </button>
+                                        </form>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <!-- ISPI -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Ispi,
+                                            certificado.FechaIspi?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Ispi",
+                                            "ISPI",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- PROCESO -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Proceso,
+                                            certificado.FechaProceso?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Proceso",
+                                            "Proceso",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- GENERADO -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Generado,
+                                            certificado.FechaGenerado?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Generado",
+                                            "Generado",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- IMPRESIÓN -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Impresion,
+                                            certificado.FechaImpresion?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Impresion",
+                                            "Impresión",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- DNA -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.EnviadoDna,
+                                            certificado.FechaEnviadoDna?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "EnviadoDna",
+                                            "Enviado DNA",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- FINALIZADO -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Finalizado,
+                                            certificado.FechaFinalizado?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Finalizado",
+                                            "Finalizado",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- SMS RETIRO -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.SmsRetiro,
+                                            certificado.FechaSmsRetiro?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "SmsRetiro",
+                                            "SMS Retiro",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- ENTREGADO -->
+                                    <td>
+                                        @EstadoCertificado(
+                                            certificado.Entregado,
+                                            certificado.FechaEntregado?.ToString("dd/MM/yyyy"),
+                                            certificado.Id,
+                                            "Entregado",
+                                            "Entregado",
+                                            item.Alumno.Nombres + " " + item.Alumno.Apellidos)
+                                    </td>
+
+                                    <!-- OBSERVACIÓN Y ARCHIVO -->
+                                    <td class="observation-column">
+
+                                        @if (!string.IsNullOrWhiteSpace(certificado.Observacion))
+                                        {
+                                            <div class="observation-text">
+                                                @certificado.Observacion
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">
+                                                Sin observación
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(certificado.UrlArchivo))
+                                        {
+                                            <a href="@certificado.UrlArchivo"
+                                               target="_blank"
+                                               rel="noopener"
+                                               class="file-link">
+                                                <i class="bi bi-paperclip"></i>
+                                                Ver archivo
+                                            </a>
+                                        }
+
+                                    </td>
+
+                                    <!-- ACCIONES -->
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary btn-observation"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalObservacion@(certificado.Id)">
+
+                                            <i class="bi bi-pencil-square me-1"></i>
+                                            Editar
+                                        </button>
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            @if (!Model.Inscripciones.Any())
+            {
+                <div class="empty-state">
+                    <i class="bi bi-people"></i>
+                    <h5>No hay alumnos inscritos</h5>
+                    <p>Inscriba alumnos para comenzar el proceso de certificación.</p>
+                </div>
+            }
+
+        </div>
+
+        <!-- MODALES DE OBSERVACIÓN -->
+        @foreach (var item in Model.Inscripciones)
+        {
+            var certificado = item.Certificaciones
+                .FirstOrDefault(c => c.Activo);
+
+            if (certificado != null)
+            {
+                <div class="modal fade"
+                     id="modalObservacion@(certificado.Id)"
+                     tabindex="-1"
+                     aria-labelledby="tituloObservacion@(certificado.Id)"
+                     aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+                        <div class="modal-content observation-modal">
+
+                            <form asp-action="ActualizarObservacion"
+                                  method="post"
+                                  enctype="multipart/form-data">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="certificadoId"
+                                       value="@certificado.Id" />
+
+                                <input type="hidden"
+                                       name="cursoId"
+                                       value="@Model.CursoId" />
+
+                                <div class="modal-header observation-modal-header">
+
+                                    <div class="modal-title-area">
+                                        <div class="modal-icon">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </div>
+
+                                        <div>
+                                            <h5 class="modal-title"
+                                                id="tituloObservacion@(certificado.Id)">
+                                                Observación y documentación
+                                            </h5>
+
+                                            <p>
+                                                @item.Alumno.Nombres
+                                                @item.Alumno.Apellidos
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal">
+                                    </button>
+
+                                </div>
+
+                                <div class="modal-body p-4">
+
+                                    <!-- OBSERVACIÓN -->
+                                    <div class="mb-4">
+
+                                        <label class="form-label modal-label">
+                                            <i class="bi bi-chat-left-text me-2"></i>
+                                            Observación
+                                        </label>
+
+                                        <textarea name="observacion"
+                                                  class="form-control observation-textarea"
+                                                  rows="4"
+                                                  placeholder="Escriba aquí las observaciones relacionadas con el certificado...">@certificado.Observacion</textarea>
+
+                                        <small class="text-muted">
+                                            Registre detalles, aclaraciones o información importante.
+                                        </small>
+
+                                    </div>
+
+                                    <!-- ARCHIVO -->
+                                    <div class="file-upload-section">
+
+                                        <label class="form-label modal-label">
+                                            <i class="bi bi-paperclip me-2"></i>
+                                            Adjuntar documento
+                                        </label>
+
+                                        <div class="upload-area">
+
+                                            <div class="upload-icon">
+                                                <i class="bi bi-cloud-arrow-up-fill"></i>
+                                            </div>
+
+                                            <div class="upload-content">
+
+                                                <h6>Seleccione un archivo</h6>
+
+                                                <p>
+                                                    PDF, Word, Excel o imagen.
+                                                    Tamaño máximo: 10 MB.
+                                                </p>
+
+                                                <input type="file"
+                                                       name="archivo"
+                                                       class="form-control"
+                                                       accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg" />
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- ARCHIVO EXISTENTE -->
+                                        @if (!string.IsNullOrWhiteSpace(certificado.UrlArchivo))
+                                        {
+                                            <div class="current-file">
+
+                                                <div class="current-file-icon">
+                                                    <i class="bi bi-file-earmark-check-fill"></i>
+                                                </div>
+
+                                                <div class="current-file-info">
+                                                    <strong>Archivo actualmente guardado</strong>
+                                                    <small>
+                                                        Puede abrirlo para consultarlo.
+                                                    </small>
+                                                </div>
+
+                                                <a href="@certificado.UrlArchivo"
+                                                   target="_blank"
+                                                   rel="noopener"
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="bi bi-eye me-1"></i>
+                                                    Ver archivo
+                                                </a>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer observation-modal-footer">
+
+                                    <button type="button"
+                                            class="btn btn-light"
+                                            data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+
+                                    <button type="submit"
+                                            class="btn btn-primary">
+                                        <i class="bi bi-save me-2"></i>
+                                        Guardar cambios
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        }
+    }
+
+</div>
+
+<!-- MODAL CONFIRMAR ESTADO -->
+<div class="modal fade"
+     id="modalConfirmarEstado"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content state-confirm-modal">
+
+            <div class="modal-header">
+                <div>
+                    <span class="confirm-label">CONFIRMACIÓN</span>
+                    <h5 class="modal-title">
+                        Actualizar etapa
+                    </h5>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <div class="confirm-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+
+                <h5>¿Desea completar esta etapa?</h5>
+
+                <p class="text-muted">
+                    Se registrará el estado del certificado.
+                </p>
+
+                <div class="confirm-info">
+                    <span>Alumno</span>
+                    <strong id="alumnoEstado"></strong>
+                </div>
+
+                <div class="confirm-info">
+                    <span>Etapa</span>
+                    <strong id="nombreEstado"></strong>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <a href="#"
+                   id="btnConfirmarEstado"
+                   class="btn btn-primary">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Confirmar
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MÉTODO PARA MOSTRAR CADA ETAPA -->
+@functions {
+    public Microsoft.AspNetCore.Html.IHtmlContent EstadoCertificado(
+        bool completado,
+        string? fecha,
+        int certificadoId,
+        string accion,
+        string nombreEstado,
+        string alumno)
+    {
+        if (completado)
+        {
+            return new Microsoft.AspNetCore.Html.HtmlString(
+                $@"<div class='process-step completed'>
+                    <div class='process-check'>
+                        <i class='bi bi-check-lg'></i>
+                    </div>
+                    <span class='process-date'>{fecha ?? "Completado"}</span>
+                </div>");
+        }
+
+        var url = Url.Action(
+            "CambiarEstado",
+            "Gestion",
+            new
+            {
+                certificadoId = certificadoId,
+                accion = accion
+            });
+
+        var urlHtml = System.Text.Encodings.Web.HtmlEncoder.Default
+            .Encode(url ?? "#");
+
+        var estadoHtml = System.Text.Encodings.Web.HtmlEncoder.Default
+            .Encode(nombreEstado);
+
+        var alumnoHtml = System.Text.Encodings.Web.HtmlEncoder.Default
+            .Encode(alumno);
+
+        return new Microsoft.AspNetCore.Html.HtmlString(
+            $@"<a href='#'
+                class='process-step pending btn-confirmar-estado'
+                data-bs-toggle='modal'
+                data-bs-target='#modalConfirmarEstado'
+                data-url='{urlHtml}'
+                data-estado='{estadoHtml}'
+                data-alumno='{alumnoHtml}'>
+                    <div class='process-pending-icon'>
+                        <i class='bi bi-clock'></i>
+                    </div>
+                    <span>Pendiente</span>
+                </a>");
+    }
+}
+
+@section Scripts {
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const modalConfirmarEstado =
+                document.getElementById("modalConfirmarEstado");
+
+            if (modalConfirmarEstado) {
+
+                modalConfirmarEstado.addEventListener(
+                    "show.bs.modal",
+                    function (event) {
+
+                        const boton = event.relatedTarget;
+
+                        if (!boton) return;
+
+                        const url = boton.getAttribute("data-url");
+                        const estado = boton.getAttribute("data-estado");
+                        const alumno = boton.getAttribute("data-alumno");
+
+                        document
+                            .getElementById("btnConfirmarEstado")
+                            .setAttribute("href", url);
+
+                        document
+                            .getElementById("nombreEstado")
+                            .innerText = estado;
+
+                        document
+                            .getElementById("alumnoEstado")
+                            .innerText = alumno;
+                    });
+            }
+
+            // Mostrar el nombre del archivo seleccionado
+            document.querySelectorAll('input[type="file"]').forEach(function (input) {
+
+                input.addEventListener("change", function () {
+
+                    const archivo = this.files[0];
+
+                    if (archivo && archivo.size > 10 * 1024 * 1024) {
+                        alert("El archivo supera el tamaño máximo de 10 MB.");
+                        this.value = "";
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+<style>
+
+    .gestion-container {
+        padding: 25px;
+        background: #f4f7fb;
+        min-height: 100vh;
+    }
+
+    /* ENCABEZADO */
+
+    .gestion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .gestion-subtitle {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .gestion-header h2 {
+        color: #172554;
+        font-weight: 800;
+        margin: 5px 0;
+    }
+
+    .gestion-header p {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .header-icon {
+        width: 65px;
+        height: 65px;
+        border-radius: 18px;
+        background: #e0eaff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+    }
+
+    /* PANELES */
+
+    .panel-card {
+        background: #fff;
+        border: 1px solid #e5eaf2;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, .04);
+        overflow: hidden;
+    }
+
+    .panel-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px;
+        border-bottom: 1px solid #edf1f7;
+    }
+
+        .panel-heading h5 {
+            font-weight: 700;
+            color: #172554;
+            margin-bottom: 3px;
+        }
+
+        .panel-heading small {
+            color: #94a3b8;
+        }
+
+    .panel-body {
+        padding: 22px;
+    }
+
+    .panel-heading-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+        .panel-heading-icon.blue {
+            background: #e0eaff;
+            color: #2563eb;
+        }
+
+        .panel-heading-icon.green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .panel-heading-icon.cyan {
+            background: #cffafe;
+            color: #0891b2;
+        }
+
+        .panel-heading-icon.orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .panel-heading-icon.navy {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 9px;
+        border-color: #dbe3ef;
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
+        }
+
+    .btn {
+        border-radius: 9px;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 9px 15px;
+    }
+
+    /* CURSO SELECCIONADO */
+
+    .curso-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 30px;
+        border-radius: 16px;
+        background: linear-gradient(120deg, #172554, #1e40af);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(30, 64, 175, .15);
+    }
+
+    .curso-label {
+        color: #bfdbfe;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .curso-banner h3 {
+        font-weight: 800;
+        margin: 8px 0;
+    }
+
+    .curso-banner p {
+        color: #dbeafe;
+        margin: 0;
+    }
+
+    .curso-banner-status {
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.15);
+        padding: 9px 15px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #4ade80;
+        border-radius: 50%;
+        margin-right: 7px;
+    }
+
+    /* ESTADÍSTICAS */
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        padding: 22px;
+        border-radius: 15px;
+        background: #fff;
+        border: 1px solid #e5eaf2;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, .03);
+    }
+
+    .stat-icon {
+        width: 53px;
+        height: 53px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 23px;
+    }
+
+    .stat-card span {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .stat-card h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 4px 0 0;
+        color: #172554;
+    }
+
+    .stat-blue .stat-icon {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .stat-purple .stat-icon {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+
+    .stat-green .stat-icon {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .stat-orange .stat-icon {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    /* TABLA DEL PROCESO */
+
+    .certificado-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 22px;
+        border-bottom: 1px solid #edf1f7;
+    }
+
+    .certificado-heading-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .certificado-heading h5 {
+        font-weight: 800;
+        color: #172554;
+        margin-bottom: 4px;
+    }
+
+    .certificado-heading small {
+        color: #94a3b8;
+    }
+
+    .process-legend {
+        display: flex;
+        gap: 18px;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+        .process-legend span {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+    .legend-circle {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+
+        .legend-circle.completed {
+            background: #16a34a;
+        }
+
+        .legend-circle.pending {
+            background: #cbd5e1;
+        }
+
+    .certificate-table {
+        margin-bottom: 0;
+        min-width: 1500px;
+    }
+
+        .certificate-table thead th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .certificate-table tbody td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid #edf1f7;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .certificate-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+    .student-column {
+        min-width: 230px;
+        text-align: left !important;
+    }
+
+    .student-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .student-avatar {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: #e0e7ff;
+        color: #4338ca;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+    }
+
+    .student-info strong {
+        display: block;
+        color: #1e293b;
+        font-size: 12px;
+    }
+
+    .student-info small {
+        color: #94a3b8;
+        display: block;
+        margin-top: 3px;
+        font-size: 10px;
+    }
+
+    .ci-badge {
+        background: #f1f5f9;
+        color: #475569;
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-weight: 600;
+        font-size: 11px;
+    }
+
+    /* ETAPAS */
+
+    .process-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        min-width: 75px;
+    }
+
+        .process-step.completed {
+            color: #16a34a;
+        }
+
+    .process-check {
+        width: 29px;
+        height: 29px;
+        border-radius: 50%;
+        background: #dcfce7;
+        color: #16a34a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .process-date {
+        color: #64748b;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .process-step.pending {
+        text-decoration: none;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .process-pending-icon {
+        width: 29px;
+        height: 29px;
+        border-radius: 50%;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    .process-step.pending span {
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .process-step.pending:hover {
+        color: #2563eb;
+        transform: translateY(-2px);
+    }
+
+        .process-step.pending:hover .process-pending-icon {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
+
+    .no-certificate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #d97706;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+        .no-certificate i {
+            font-size: 18px;
+        }
+
+    .observation-column {
+        min-width: 180px;
+        text-align: left !important;
+    }
+
+    .observation-text {
+        color: #475569;
+        line-height: 1.5;
+        max-width: 220px;
+        overflow-wrap: anywhere;
+    }
+
+    .file-link {
+        display: inline-block;
+        margin-top: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+        .file-link:hover {
+            text-decoration: underline;
+        }
+
+    .btn-observation {
+        white-space: nowrap;
+    }
+
+    /* MODAL OBSERVACIÓN */
+
+    .observation-modal {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, .20);
+    }
+
+    .observation-modal-header {
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 22px 25px;
+    }
+
+    .modal-title-area {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .modal-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .modal-title-area h5 {
+        color: #172554;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+
+    .modal-title-area p {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .modal-label {
+        color: #334155;
+        font-weight: 700;
+    }
+
+    .observation-textarea {
+        resize: vertical;
+        min-height: 110px;
+        line-height: 1.6;
+    }
+
+    .file-upload-section {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 13px;
+        padding: 18px;
+    }
+
+    .upload-area {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px;
+        background: #fff;
+        border: 1px dashed #94a3b8;
+        border-radius: 12px;
+    }
+
+    .upload-icon {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    .upload-content {
+        width: 100%;
+    }
+
+        .upload-content h6 {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .upload-content p {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+    .current-file {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 15px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #dbeafe;
+        border-radius: 10px;
+    }
+
+    .current-file-icon {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        border-radius: 9px;
+        background: #dcfce7;
+        color: #16a34a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+    }
+
+    .current-file-info {
+        flex: 1;
+    }
+
+        .current-file-info strong {
+            display: block;
+            color: #334155;
+            font-size: 12px;
+        }
+
+        .current-file-info small {
+            color: #94a3b8;
+            font-size: 10px;
+        }
+
+    .observation-modal-footer {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 16px 25px;
+    }
+
+    /* MODAL ESTADO */
+
+    .state-confirm-modal {
+        border: none;
+        border-radius: 17px;
+        overflow: hidden;
+    }
+
+        .state-confirm-modal .modal-header {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px;
+        }
+
+    .confirm-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: #64748b;
+    }
+
+    .state-confirm-modal .modal-title {
+        font-weight: 800;
+        color: #172554;
+        margin-top: 4px;
+    }
+
+    .confirm-icon {
+        width: 65px;
+        height: 65px;
+        border-radius: 18px;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        margin: 5px auto 18px;
+    }
+
+    .state-confirm-modal .modal-body h5 {
+        font-weight: 800;
+        color: #172554;
+    }
+
+    .confirm-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 12px;
+        margin-top: 10px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+
+        .confirm-info span {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .confirm-info strong {
+            color: #334155;
+            font-size: 13px;
+        }
+
+    .state-confirm-modal .modal-footer {
+        border-top: 1px solid #e2e8f0;
+        padding: 15px 20px;
+    }
+
+    /* ESTADO VACÍO */
+
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+    }
+
+        .empty-state i {
+            font-size: 45px;
+            color: #cbd5e1;
+        }
+
+        .empty-state h5 {
+            color: #334155;
+            font-weight: 800;
+            margin-top: 15px;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+    /* RESPONSIVE */
+
+    @@media (max-width: 768px) {
+
+        .gestion-container {
+            padding: 15px;
+        }
+
+        .gestion-header {
+            align-items: flex-start;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 22px;
+        }
+
+        .curso-banner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .process-legend {
+            width: 100%;
+        }
+
+        .upload-area {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .current-file {
+            flex-wrap: wrap;
+        }
+    }
+
+</style>

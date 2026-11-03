@@ -1,0 +1,274 @@
+﻿@model Curso
+
+@{
+    ViewData["Title"] = "Nuevo Curso";
+}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-header bg-dark text-white border-0 py-4">
+
+                    <h3 class="mb-1 fw-bold text-center">
+
+                        <i class="bi bi-journal-bookmark-fill text-info"></i>
+
+                        Nuevo Curso
+
+                    </h3>
+
+                    <p class="text-center mb-0 text-light">
+
+                        Registro de cursos y programas académicos
+
+                    </p>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                            @TempData["Error"]
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+                    }
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+
+                            <i class="bi bi-check-circle-fill me-2"></i>
+
+                            @TempData["Success"]
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+
+                            <label asp-for="Codigo"
+                                   class="form-label fw-semibold">
+
+                                Código
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="bi bi-upc-scan"></i>
+
+                                </span>
+
+                                <input asp-for="Codigo"
+                                       class="form-control"
+                                       placeholder="Ej: CUR-001" />
+
+                            </div>
+
+                            <span asp-validation-for="Codigo"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Nombre"
+                                   class="form-label fw-semibold">
+
+                                Nombre del Curso
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="bi bi-book-fill"></i>
+
+                                </span>
+
+                                <input asp-for="Nombre"
+                                       class="form-control"
+                                       placeholder="Ingrese el nombre del curso" />
+
+                            </div>
+
+                            <span asp-validation-for="Nombre"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="FechaInicio"
+                                       class="form-label fw-semibold">
+
+                                    Fecha Inicio
+
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+
+                                        <i class="bi bi-calendar-event-fill"></i>
+
+                                    </span>
+
+                                    <input asp-for="FechaInicio"
+                                           type="date"
+                                           class="form-control" />
+
+                                </div>
+
+                                <span asp-validation-for="FechaInicio"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="FechaFin"
+                                       class="form-label fw-semibold">
+
+                                    Fecha Fin
+
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+
+                                        <i class="bi bi-calendar-check-fill"></i>
+
+                                    </span>
+
+                                    <input asp-for="FechaFin"
+                                           type="date"
+                                           class="form-control" />
+
+                                </div>
+
+                                <span asp-validation-for="FechaFin"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between">
+
+                            <a asp-action="Index"
+                                   class="btn btn-outline-secondary rounded-3">
+
+                                <i class="bi bi-arrow-left-circle"></i>
+
+                                Volver
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-guardar">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Guardar Curso
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .card {
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        background: #f8fafc;
+        min-width: 45px;
+        justify-content: center;
+    }
+
+    .form-control {
+        padding: 10px;
+    }
+
+        .form-control:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 .15rem rgba(56,189,248,.25);
+        }
+
+    .btn-guardar {
+        background: #38bdf8;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+        .btn-guardar:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+
+    .alert {
+        border-radius: 12px;
+    }
+
+</style>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
